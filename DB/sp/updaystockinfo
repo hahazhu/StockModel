@@ -1,0 +1,60 @@
+delimiter $$
+create procedure upDayStockInfo(IN i_stock_id VARCHAR(10), IN i_up_date VARCHAR(10))
+begin
+DECLARE last_date VARCHAR(20);
+DECLARE last_close DECIMAL(8,4);
+DECLARE last_ema12 DECIMAL(8,4);
+DECLARE last_ema26 DECIMAL(8,4);
+DECLARE last_dif DECIMAL(8,4);
+DECLARE last_dea DECIMAL(8,4);
+DECLARE COUT INTEGER(10);
+
+DECLARE this_close DECIMAL(8,4);
+DECLARE this_ema12 DECIMAL(8,4);
+DECLARE this_ema26 DECIMAL(8,4);
+DECLARE this_dif DECIMAL(8,4);
+DECLARE this_dea DECIMAL(8,4);
+DECLARE this_macd DECIMAL(8,4);
+
+DECLARE this_ma5 DECIMAL(8,4);
+DECLARE this_ma10 DECIMAL(8,4);
+DECLARE this_ma20 DECIMAL(8,4);
+DECLARE this_ma30 DECIMAL(8,4);
+
+SELECT COUNT(1) into cout FROM stock_day t where t.stock_id = i_stock_id and t.d_date<=i_up_date;
+if cout=1 then
+  update stock_day t set t.chg=0,t.percent=0,t.ma5=t.close,t.ma10=t.close,t.ma20=t.close,t.ma30=t.close,t.ema12=t.close ,t.ema26=t.close,t.dif=0,t.dea=0,t.macd=0  where t.stock_id = i_stock_id and t.d_date=i_up_date;
+end if;
+if cout>1 then
+  select t.d_date,t.close,t.ema12,t.ema26,t.dif,t.dea into last_date,last_close,last_ema12,last_ema26,last_dif,last_dea from stock_day t where  t.stock_id = i_stock_id and  t.d_date=(select max(x.d_date) from stock_day x where x.stock_id = i_stock_id and x.d_date<i_up_date);
+  select t.close into this_close from stock_day t where t.stock_id = i_stock_id and t.d_date=i_up_date;
+
+  UPDATE stock_day t set t.chg= (this_close-last_close) ,t.percent=(100*(this_close-last_close)/last_close) where t.stock_id = i_stock_id and t.d_date=i_up_date;
+  commit;
+
+  select avg(tem.close) into this_ma5 from ( select x.close close  from stock_day x where x.stock_id = i_stock_id and x.d_date<= i_up_date order by x.d_date desc limit 5) tem;
+  select avg(tem.close) into this_ma10 from ( select x.close close  from stock_day x where x.stock_id = i_stock_id and x.d_date<= i_up_date order by x.d_date desc limit 10) tem;
+  select avg(tem.close) into this_ma20 from ( select x.close close  from stock_day x where x.stock_id = i_stock_id and x.d_date<= i_up_date order by x.d_date desc limit 20) tem;
+  select avg(tem.close) into this_ma30 from ( select x.close close  from stock_day x where x.stock_id = i_stock_id and x.d_date<= i_up_date order by x.d_date desc limit 30) tem;
+
+  update stock_day t set t.ma5=this_ma5
+  ,t.ma10=this_ma10
+  ,t.ma20=this_ma20
+  ,t.ma30=this_ma30
+  where t.stock_id = i_stock_id and t.d_date=i_up_date;
+  commit;
+  set this_ema12=last_ema12*11/13+this_close*2/13;
+  set this_ema26=last_ema26*25/27+this_close*2/27;
+  set this_dif = this_ema12-this_ema26;
+  set this_dea = last_dea*8/10+this_dif*2/10;
+  set this_macd = 2*(this_dif-this_dea);
+
+  UPDATE stock_day t set t.ema12= this_ema12 ,t.ema26= this_ema26 ,t.dif= this_dif ,t.dea= this_dea ,t.macd= this_macd
+  where t.stock_id = i_stock_id and t.d_date=i_up_date;
+  commit;
+end if;
+
+
+
+end $$
+delimiter ;
