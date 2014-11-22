@@ -1,0 +1,5 @@
+DROP TABLE IF EXISTS `gao_stock`.`stock_info`;
+CREATE TABLE `stock_info` (
+  `stock_id` varchar(6) NOT NULL,
+  `market` varchar(2) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
