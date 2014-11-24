@@ -35,8 +35,8 @@ public class StockPriceDbUtil {
 		for(int i=0;i<codes.size();i++){
 			String call = "upDayStockInfo"; 
 	        List list = new ArrayList();
-	        list.add(codes.get(i).toString().substring(2));
-	        list.add(Util.GetNowDate());
+	        list.add("'"+codes.get(i).toString().substring(2)+"'");
+	        list.add("'"+Util.GetNowDate()+"'");
 			boolean res = jdbcUtils.callProc(call, list);
 			System.out.println(codes.get(i).toString()+","+res);
 		}	
