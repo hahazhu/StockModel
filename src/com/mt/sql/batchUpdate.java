@@ -8,17 +8,19 @@ import java.util.Iterator;
 import java.util.List;
 
 public class batchUpdate {
-	public static void batchUpdate(String sql, List content ,int paraNum) {
+	static {
 		String db = "com.mysql.jdbc.Driver";
-		String host = "jdbc:mysql://127.0.0.1:3306/gao_stock";
-		String user = "root";
-		String passwd = "";
-		Connection con = null;
 		try {
 			Class.forName(db);
 		} catch (Exception e) {
 			System.out.println("加载驱动失败:" + db);
 		}
+	}
+	public static void batchUpdate(String sql, List content ,int paraNum) {
+		String host = "jdbc:mysql://127.0.0.1:3306/gao_stock";
+		String user = "root";
+		String passwd = "";
+		Connection con = null;
 		try {
 			con = DriverManager.getConnection(host, user, passwd);
 			con.setAutoCommit(false);// 关闭事务自动提交
