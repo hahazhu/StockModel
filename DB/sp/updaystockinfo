@@ -22,6 +22,7 @@ DECLARE this_ma20 DECIMAL(8,4);
 DECLARE this_ma30 DECIMAL(8,4);
 
 SELECT COUNT(1) into cout FROM stock_day t where t.stock_id = i_stock_id and t.d_date<=i_up_date;
+commit;
 if cout=1 then
   update stock_day t set t.chg=0,t.percent=0,t.ma5=t.close,t.ma10=t.close,t.ma20=t.close,t.ma30=t.close,t.ema12=t.close ,t.ema26=t.close,t.dif=0,t.dea=0,t.macd=0  where t.stock_id = i_stock_id and t.d_date=i_up_date;
 end if;
