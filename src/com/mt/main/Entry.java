@@ -1,18 +1,8 @@
 package com.mt.main;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import com.mt.common.Util;
-import com.mt.sql.MysqlUtil;
-import com.mt.sql.batchUpdate;
 import com.mt.stockcode.StockCodeDbUtil;
 import com.mt.stockcode.StockCodeURLUtil;
 import com.mt.stockprice.StockPriceDbUtil;
@@ -22,7 +12,7 @@ public class Entry {
 	
 	public static void main(String[] args) throws Exception {
 		
-		String flag="test";
+		String flag="history";
 		
 		//获取最新的全量股票代码
 		List stockCodeList = StockCodeURLUtil.getStockListFromSina();
@@ -31,16 +21,19 @@ public class Entry {
 		
 		//检查是否有新股,有新股则导入存量代码
 		List newStock = StockCodeDbUtil.getNewStock();
-		if(newStock!=null){
-			System.err.println(newStock);
-//			StockPriceURLUtil.importHisFromListAfterIndex(0,newStock);
+		if(newStock!=null&&newStock.size()>0){
+			System.err.println("有新股");
+			for(Iterator it=newStock.iterator();it.hasNext();){
+				System.err.println("新股:"+it.next());
+			}
+			StockPriceURLUtil.importHisFromListAfterIndex(0,newStock);
 		}
 		
 		
 		if(flag.equals("history")){
 			//导入存量
-//			StockPriceURLUtil.importHisFromListAfterIndex(0,stockCodeList );
-			StockPriceURLUtil.importHisFromListAfterCode("sh600530",stockCodeList );
+			StockPriceURLUtil.importHisFromListAfterIndex(0,stockCodeList );
+//			StockPriceURLUtil.importHisFromListAfterCode("sh600530",stockCodeList );
 		}else if(flag.equals("daily")){
 			//每日增量
 			List<List> content=StockPriceURLUtil.getTodayStockInfo(0, stockCodeList);
