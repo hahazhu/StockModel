@@ -24,6 +24,7 @@ public class StockCodeDbUtil {
 		   mysql.getConnection();
 		   mysql.updateByPreparedStatement("delete from gao_stock.stock_info_tmp ", null);
 		   batchUpdate.batchUpdate("insert into gao_stock.stock_info_tmp(stock_id,market) values(?,?)", params, 2);
+		   System.err.println("´úÂëÈë¿â!");
 		   mysql.releaseConn();
 		   
 	   }
