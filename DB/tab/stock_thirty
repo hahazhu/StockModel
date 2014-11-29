@@ -1,0 +1,23 @@
+DROP TABLE IF EXISTS `gao_stock`.`stock_thirty`;
+CREATE TABLE `gao_stock`.`stock_thirty` (
+  `STOCK_ID` varchar(6) DEFAULT NULL,
+  `MARKET` varchar(2) DEFAULT NULL,
+  `VOLUME` decimal(18,0) DEFAULT NULL,
+  `OPEN` decimal(8,4) DEFAULT NULL,
+  `HIGH` decimal(8,4) DEFAULT NULL,
+  `CLOSE` decimal(8,4) DEFAULT NULL,
+  `LOW` decimal(8,4) DEFAULT NULL,
+  `CHG` decimal(8,4) DEFAULT NULL,
+  `PERCENT` decimal(8,4) DEFAULT NULL,
+  `TURNRATE` decimal(10,4) DEFAULT NULL,
+  `MA5` decimal(8,4) DEFAULT NULL,
+  `MA10` decimal(8,4) DEFAULT NULL,
+  `MA20` decimal(8,4) DEFAULT NULL,
+  `EMA12` decimal(8,4) DEFAULT NULL,
+  `EMA26` decimal(8,4) DEFAULT NULL,
+  `DIF` decimal(8,4) DEFAULT NULL,
+  `DEA` decimal(8,4) DEFAULT NULL,
+  `MACD` decimal(8,4) DEFAULT NULL,
+  `T_TIME` varchar(20) DEFAULT NULL,
+  KEY `IND_STOCK_THIRTY` (`STOCK_ID`,`T_TIME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
