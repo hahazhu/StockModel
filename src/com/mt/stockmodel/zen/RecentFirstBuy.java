@@ -96,7 +96,7 @@ public class RecentFirstBuy {
 				macd_sum+=macd;
 				macd_avg=macd_sum/macd_count;
 			}
-			
+			 
 		}
 		if(highLows==null||highLows.size()==0){
 			return false;
