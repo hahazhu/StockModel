@@ -1,5 +1,6 @@
 package com.mt.stockmodel.zen;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.mt.sql.MysqlUtil;
+import com.mt.stockcode.StockCodeURLUtil;
 
 public class FirstBuy {
 	public static float getLastFromList(List input,String typeName){
@@ -25,7 +27,7 @@ public class FirstBuy {
 		return high;
 	}
 	public static float getLowFromList(List input,String typeName){
-		float  low =-1;
+		float  low =999;
 		for(int i =0 ;i<input.size();i++){
 			float tmp= ((Float) ((Map) input.get(i)).get(typeName));
 			low=low<tmp?low:tmp;
@@ -127,7 +129,7 @@ public class FirstBuy {
 						 * 		当为创新高时，low变成初始化状态，
 						 *		当为创新低时，high变成初始化状态。
 						 */
-						if(((last_flag==1)&&(high_bd>getHighFromList(trend_list, "high")))||((last_flag==-1)&&(low_bd<getLowFromList(trend_list, "low")))){
+						if(((last_flag==1)&&(high_bd>getHighFromList(bd_list, "high")))||((last_flag==0)&&(low_bd<getLowFromList(bd_list, "low")))){
 							if((trend_last_flag==1)&&(last_flag==1)&&macd_high_bd<last_macd_high){
 								System.out.println(time+" :卖点出现");
 							}
@@ -147,6 +149,15 @@ public class FirstBuy {
 							}else if(trend_last_flag ==-1){
 								n_trend=1;
 							}else {
+								
+								trend.put("high", getHighFromList(bd_list, "high"));
+								trend.put("low", getLowFromList(bd_list, "low"));
+								trend.put("date", time);
+								trend.put("macd_high", getHighFromList(bd_list, "macd_high"));
+								trend.put("macd_low", getLowFromList(bd_list, "macd_low"));
+								trend.put("n",	 n_trend);
+								trend_list.add(trend);
+								
 								high_trend=(float) 0;low_trend=(float) -1; macd_high_trend=-999;macd_low_trend=999;
 								bd_list.clear();
 								n_bd=0;
@@ -162,10 +173,19 @@ public class FirstBuy {
 			}
 			
 		}
+		System.out.println("End");;
 	}
 
-	public static void main(String args[]) throws SQLException{
-		hasFirstBuy("000055", null, null);
+	public static void main(String args[]) throws SQLException, IOException{
+			
+		hasFirstBuy("300228", null, null);
+		//获取最新的全量股票代码
+//				List stockCodeList = StockCodeURLUtil.getStockListFromSina();
+//				for(Iterator it=stockCodeList.iterator();it.hasNext();){
+//					String code = (String) it.next();
+//					System.out.println(code+"----------------------------------------");
+//					hasFirstBuy(code.substring(2), null, null);
+//				}
 	}
 
 }
