@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,7 @@ public class Trend_buy {
 	public static List total_time=new ArrayList();
 	public static List special_time =new ArrayList();
 	public static List recent_time =new ArrayList();
+	public static List date_list =new ArrayList();
 	public static String lately="20141120";
 	public static double principle=1;
 	public static double special_pro = 0.08;
@@ -98,6 +100,7 @@ public class Trend_buy {
 			}
 			if(n==n_days){
 				System.out.println(stockCode+":"+time+":买点出现");
+				date_list.add(Integer.parseInt(time));
 				if (Integer.parseInt(time)>Integer.parseInt(lately)) {
 					List array=new ArrayList();
 					array.add(stockCode);
@@ -178,7 +181,7 @@ public class Trend_buy {
 					Map row = it.next();
 					String code=(String) row.get("stock_id");
 					//System.out.println(code+"----------------------------------------");
-					hasQsBuy(code, "20071031", "20081031");
+					hasQsBuy(code, "20071031", "20141231");
 				}
 		
 		//获取总数
@@ -202,6 +205,8 @@ public class Trend_buy {
 				
 				System.out.println("最后本金变为："+principle);
 				System.out.println("近期符合条件的为："+recent_time);
+				Collections.sort(date_list);
+				System.out.println("日期为："+date_list);
 	}
 	
 }
