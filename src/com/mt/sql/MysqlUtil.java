@@ -84,7 +84,7 @@ public class MysqlUtil {
         // TODO Auto-generated constructor stub  
         try{  
             Class.forName(DRIVER);  
-            System.out.println("数据库连接成功！");  
+            //System.out.println("数据库连接成功！");  
   
         }catch(Exception e){  
   
