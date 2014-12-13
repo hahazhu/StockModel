@@ -80,16 +80,16 @@ public class MysqlUtil {
     private Connection connection;  
     private PreparedStatement pstmt;  
     private ResultSet resultSet;  
-    public MysqlUtil() {  
-        // TODO Auto-generated constructor stub  
-        try{  
+    static{
+    	try{  
             Class.forName(DRIVER);  
             System.out.println("数据库连接成功！");  
   
         }catch(Exception e){  
   
-        }  
-    }  
+        } 
+    }
+ 
       
     public static void main(String[] args) throws SQLException {
         MysqlUtil jdbcUtils = new MysqlUtil();  
